@@ -13,7 +13,7 @@ function App() {
         <h2>Welcome to the Future of Simplicity</h2>
         <p>
           This smart web app showcases a clean interface, modern design principles, and scalable layout.
-          Built using React, it's a perfect foundation for bigger projects.
+          Built using .
         </p>
       </section>
 
