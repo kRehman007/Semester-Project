@@ -1,0 +1,58 @@
+pipeline {
+    agent any  // Run the pipeline on any available agent
+
+    environment {
+        SONARQUBE = 'SonarQube'  // Name of the SonarQube server in Jenkins Global Tool Configuration
+        SURGE_TOKEN = credentials('SURGE_TOKEN')  // Securely load the Surge token from Jenkins credentials
+        IMAGE_NAME = 'my-vite-app'  // Optional environment variable (not used in current pipeline)
+    }
+
+    tools {
+        nodejs "Nodejs"  // Use the Node.js installation named "Nodejs" (configured in Jenkins global tools)
+    }
+
+    stages {
+
+        stage('Checkout') {
+            steps {
+                // Clone the main branch of your GitHub repository
+                checkout([
+                    $class: 'GitSCM',
+                    branches: [[name: '*/main']],
+                    userRemoteConfigs: [[url: 'https://github.com/kRehman007/Semester-Project.git']]
+                ])
+            }
+        }
+
+        stage('Install Dependencies') {
+            steps {
+                // Install project dependencies defined in package.json
+                bat 'npm install'  // Use `sh 'npm install'` if using a Unix-based agent
+            }
+        }
+
+        stage('SonarQube Analysis') {
+            steps {
+                // Run static code analysis using SonarQube
+                withSonarQubeEnv("${SONARQUBE}") {
+                    bat 'C:\\sonar-scanner\\bin\\sonar-scanner.bat'  // Run SonarScanner from specified path on Windows
+                }
+            }
+        }
+
+        stage('Build Vite App') {
+            steps {
+                // Build the production-ready Vite app (output goes to `dist/`)
+                bat 'npm run build'
+            }
+        }
+
+        stage('Deploy to Surge') {
+            steps {
+                // Install Surge CLI globally and deploy the app to Surge using a secure token
+                bat 'npm install -g surge'
+                bat "surge ./dist https://vite-react.surge.sh --token %SURGE_TOKEN%"
+            }
+        }
+    }
+}

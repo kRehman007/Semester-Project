@@ -10,13 +10,6 @@ function App() {
       
       {/* Hero Section */}
       <section style={{ marginBottom: '2rem', textAlign: 'center' }}>
-        <p></p>
-        <p></p>
-        <p></p>
-        <p></p>
-        <p></p>
-        <p></p>
-        <p></p>
         <h2>Welcome to the Future of Simplicity</h2>
         <p>
           This smart web app showcases a clean interface, modern design principles, and scalable layout.
